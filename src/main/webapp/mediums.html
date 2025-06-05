@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Liste des Médiums - Predict'IF</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Predict'IF</h1>
+    <div class="user-info" onclick="window.location.href='profil.html'">
+      <span>John Doe</span>
+      <img src="avatar.jpg" alt="Profil" class="avatar">
+    </div>
+  </header>
+
+  <main class="mediums-page">
+    <h2>Liste de Médiums</h2>
+    <div class="mediums-grid">
+      <div class="medium-card" onclick="openMediumModal('Médium 1', 'Cartomancienne')">
+        <img src="avatar.png" alt="Medium 1">
+        <p><strong>Médium 1</strong><br>Cartomancienne</p>
+      </div>
+      <div class="medium-card" onclick="openMediumModal('Médium 2', 'Spirite')">
+        <img src="avatar.png" alt="Medium 2">
+        <p><strong>Médium 2</strong><br>Spirite</p>
+      </div>
+      <div class="medium-card" onclick="openMediumModal('Médium 3', 'Astrologue')">
+        <img src="avatar.png" alt="Medium 3">
+        <p><strong>Médium 3</strong><br>Astrologue</p>
+      </div>
+      <div class="medium-card" onclick="openMediumModal('Médium 4', 'Astrologue')">
+        <img src="avatar.png" alt="Medium 4">
+        <p><strong>Médium 4</strong><br>Astrologue</p>
+      </div>
+      <div class="medium-card" onclick="openMediumModal('Médium 5', 'Spirite')">
+        <img src="avatar.png" alt="Medium 5">
+        <p><strong>Médium 5</strong><br>Spirite</p>
+      </div>
+      <div class="medium-card" onclick="openMediumModal('Médium 6', 'Spirite')">
+        <img src="avatar.png" alt="Medium 6">
+        <p><strong>Médium 6</strong><br>Spirite</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button onclick="window.location.href='accueil-client.html'">Retour accueil</button>
+      <button onclick="window.location.href='index.html'">Déconnexion</button>
+    </div>
+  </main>
+
+  <!-- Modale Médium -->
+  <div class="modal-overlay" id="mediumModalOverlay" onclick="closeMediumModal()"></div>
+  <div class="modal" id="mediumModal">
+    <button class="close-button" onclick="closeMediumModal()">← retour</button>
+    <div class="medium-info">
+      <img src="avatar.png" alt="Medium Avatar" class="avatar-medium">
+      <h2 id="mediumName">Médium</h2>
+      <h3 id="mediumType">Type</h3>
+      <p id="mediumDescription">Spécialiste des grandes conversations<br>au-delà de <strong>TOUTES</strong> les frontières</p>
+    </div>
+    <button onclick="launchConsultation()">Lancer une consultation</button>
+  </div>
+
+  <script>
+    function openMediumModal(name, type) {
+      document.getElementById("mediumName").textContent = name;
+      document.getElementById("mediumType").textContent = type;
+      document.getElementById("mediumDescription").innerHTML =
+        "Spécialiste des grandes conversations<br>au-delà de <strong>TOUTES</strong> les frontières";
+      document.getElementById("mediumModalOverlay").style.display = "block";
+      document.getElementById("mediumModal").style.display = "block";
+    }
+
+    function closeMediumModal() {
+      document.getElementById("mediumModalOverlay").style.display = "none";
+      document.getElementById("mediumModal").style.display = "none";
+    }
+
+    function launchConsultation() {
+      alert("Consultation demandée !");
+      closeMediumModal();
+    }
+  </script>
+</body>
+</html>

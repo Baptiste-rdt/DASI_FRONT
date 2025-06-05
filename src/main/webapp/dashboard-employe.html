@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Employé - Predict'IF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>Predict'IF</h1>
+    <nav class="nav-tabs">
+        <button onclick="window.location.href='dashboard-employe.html'">Dashboard</button>
+        <button onclick="window.location.href='statistiques.html'">Statistiques</button>
+    </nav>
+<div class="user-dropdown" onclick="toggleMenu()">
+  <span>John Doe</span>
+  <img src="avatar.jpg" alt="Profil" class="avatar">
+  <div id="dropdownMenu" class="dropdown-menu">
+    <button onclick="window.location.href='index.html'">Deconnexion</button>
+  </div>
+</div>
+
+</header>
+
+<main class="dashboard-employe">
+    <div class="availability">
+        <span class="status available">Disponible ●</span>
+    </div>
+
+    <section class="current-consultation">
+        <h2>Mon Dashboard</h2>
+        <div class="consult-box">
+            Aucune consultation en cours
+        </div>
+    </section>
+
+    <section class="history">
+        <h2>Historique de mes consultations</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Médium</th>
+                    <th>Dénomination</th>
+                    <th>Date</th>
+                    <th>Client</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Spirite</td>
+                    <td>Médium 1</td>
+                    <td>03/04/2025</td>
+                    <td><a href="profil-client.html">Client 1</a></td>
+                </tr>
+                <tr>
+                    <td>Cartomancien</td>
+                    <td>Médium 2</td>
+                    <td>02/05/2025</td>
+                    <td><a href="profil-client.html">Client 2</a></td>
+                </tr>
+                <tr>
+                    <td>Astrologue</td>
+                    <td>Médium 3</td>
+                    <td>03/05/2025</td>
+                    <td><a href="profil-client.html">Client 3</a></td>
+                </tr>
+                <tr>
+                    <td>Astrologue</td>
+                    <td>Médium 4</td>
+                    <td>06/06/2025</td>
+                    <td><a href="profil-client.html">Client 1</a></td>
+                </tr>
+                <tr>
+                    <td>Spirite</td>
+                    <td>Médium 5</td>
+                    <td>30/06/2025</td>
+                    <td><a href="profil-client.html">Client 2</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('dropdownMenu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  }
+
+  // Fermer le menu si on clique ailleurs
+  window.addEventListener('click', function (e) {
+    const dropdown = document.querySelector('.user-dropdown');
+    const menu = document.getElementById('dropdownMenu');
+    if (!dropdown.contains(e.target)) {
+      menu.style.display = 'none';
+    }
+  });
+</script>

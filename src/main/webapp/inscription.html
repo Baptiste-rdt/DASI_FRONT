@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription - Predict'IF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="form-container">
+        <h2>Inscription</h2>
+        <form id="signup-form" onsubmit="handleSubmit(event)">
+            <div class="form-row">
+                <input type="text" placeholder="Nom" name="nom" required>
+                <input type="text" placeholder="Prénom" name="prenom" required>
+            </div>
+
+            <div class="form-row">
+                <input type="date" name="naissance" required>
+                <select name="genre" required>
+                    <option value="">Genre</option>
+                    <option value="Femme">Femme</option>
+                    <option value="Homme">Homme</option>
+                    <option value="Autre">Autre</option>
+                </select>
+            </div>
+
+            <input type="text" placeholder="Adresse" name="adresse" required>
+
+            <div class="form-row">
+                <input type="text" placeholder="Code Postal" name="cp" required>
+                <input type="text" placeholder="Ville" name="ville" required>
+            </div>
+
+            <div class="form-row">
+                <input type="email" placeholder="Email" name="email" required>
+                <input type="tel" placeholder="N° de téléphone" name="telephone" required>
+            </div>
+
+            <div class="form-row">
+                <input type="password" placeholder="Mot de passe" name="mdp" required>
+                <input type="password" placeholder="Confirmer mdp" name="confirm_mdp" required>
+            </div>
+
+            <button type="submit">S’inscrire</button>
+        </form>
+
+        <p><a href="connexion.html">Déjà membre</a></p>
+    </main>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert("Inscription réussie !");
+            window.location.href = "connexion.html";
+        }
+    </script>
+</body>
+</html>

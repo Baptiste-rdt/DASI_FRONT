@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil Client - Predict'IF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>Predict'IF</h1>
+    <div class="user-info">
+        <span>John Doe</span>
+        <img src="avatar.jpg" alt="Profil" class="avatar">
+    </div>
+</header>
+
+<main class="profile-page">
+    <section class="infos-client">
+        <h2>Infos Client</h2>
+        <input type="text" value="John" readonly>
+        <input type="text" value="Doe" readonly>
+        <input type="email" value="john.doe@email.com" readonly>
+        <input type="password" value="********" readonly>
+        <input type="date" value="1990-01-01" readonly>
+        <input type="text" value="123 rue Exemple, Paris" readonly>
+        <input type="tel" value="+33 6 12 34 56 78" readonly>
+        <button onclick="window.location.href='profil-edit.html'">Modifier</button>
+    </section>
+
+    <section class="profil-astral">
+        <h2>Profil Astral</h2>
+        <div class="astral-circles">
+            <div class="circle-item">Signe astrologique</div>
+            <div class="circle-item">Signe chinois</div>
+            <div class="circle-item">Couleur de chance</div>
+            <div class="circle-item">Animal totem</div>
+        </div>
+    </section>
+
+    <section class="history">
+        <h2>Historique</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Médium</th>
+                    <th>Type médium</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Médium 1</td>
+                    <td>Cartomancienne</td>
+                    <td>02/06/2025</td>
+                </tr>
+                <tr>
+                    <td>Médium 2</td>
+                    <td>Spirite</td>
+                    <td>03/06/2025</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="actions">
+        <button onclick="window.location.href='accueil-client.html'">Retour accueil</button>
+        <button onclick="window.location.href='index.html'">Déconnexion</button>
+    </div>
+</main>
+</body>
+</html>

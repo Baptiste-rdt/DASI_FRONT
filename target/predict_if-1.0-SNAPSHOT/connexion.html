@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion - Predict'IF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="modal-overlay" onclick="closeModal()"></div>
+
+    <div class="modal">
+        <button class="close-button" onclick="closeModal()">X</button>
+        <h2>Connexion</h2>
+        <form onsubmit="handleLogin(event)">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <div class="button-row">
+                <button type="submit">Connexion</button>
+                <button type="button" onclick="window.location.href='inscription.html'">S’inscrire</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function closeModal() {
+            window.location.href = "index.html"; // retour accueil
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            // Simule authenticatePerson()
+            alert("Connexion réussie !");
+            window.location.href = "accueil-client.html";
+        }
+    </script>
+</body>
+</html>
