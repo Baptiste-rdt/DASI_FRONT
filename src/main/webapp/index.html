@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Predict'IF - Accueil</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <h1>Predict'IF</h1>
+            <div class="buttons">
+                <button onclick="window.location.href = 'connexion.html'">Se connecter</button>
+                <button onclick="window.location.href = 'inscription.html'">S’inscrire</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="intro">
+                <p>
+                    Découvrez notre cabinet de voyance par téléphone, regroupant Spirites, astrologues ou encore cartomanciens.
+                    Les médiums qui nous accompagnent sont reconnus internationalement pour leurs talents.
+                    Chacun d’entre eux a été sélectionné pour sa précision, son honnêteté et son sérieux.
+                    Le respect de la déontologie est notre priorité.
+                </p>
+            </section>
+
+            <section class="mediums">
+                <h2>Nos médiums les plus populaires</h2>
+                <div class="medium-list" id="liste-mediums">
+                    <script>
+                        $(document).ready(function () {
+                            console.log("Appel AJAX"); // affichage dans la console web
+                            $.ajax({
+                                url: 'http://localhost:8080/predict_if/ActionServlet', // URL de l'ActionServlet
+                                method: 'GET', // Type de la requête (GET, POST, etc.)
+                                dataType: 'json', // Type de la réponse attendue (JSON ici)
+                                success: function (response) {
+                                    console.log("Réponse brute :", response); // Affiche la réponse brute
+
+                                    // Vérifiez si la réponse contient la propriété 'mediums' et si c'est un tableau
+                                    if (response.mediums && Array.isArray(response.mediums)) {
+                                        var listeMediums = $('#liste-mediums');
+                                        // Utilisez une boucle for classique pour itérer sur le tableau des clients
+                                        for (var i = 0; i < response.mediums.length; i++) {
+                                            var medium = response.mediums[i];
+                                            listeMediums.append('<div class="medium">');
+                                            listeMediums.append('<img src="images/avatar.jpg" alt="Astrologue">');
+                                            listeMediums.append('<p>' + medium.name + '</p>');
+                                            listeMediums.append('</div>');
+                                        }
+                                    } else {
+                                        console.error("La réponse ne contient pas de liste de mediums valide.");
+                                    }
+                                },
+
+                                error: function (error) {
+                                    console.error("Erreur AJAX:", error); // Afficher l'erreur dans la console
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>
