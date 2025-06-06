@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package web.controleur;
-  
+
 import fr.insalyon.dasi.java_app.dao.JpaUtil;
 import fr.insalyon.dasi.java_app.service.Service;
 import java.io.IOException;
@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import web.modele.Action;
 import web.modele.InitialiserAccueil;
+import web.modele.SeConnecter;
 import web.vue.AccueilSerialisation;
+import web.vue.ConnexionSerialisation;
 import web.vue.Serialisation;
+import web.vue.VerifierAuthentificationSerialisation;
 
 /**
  *
@@ -37,13 +40,35 @@ public class ActionServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        Action action = new InitialiserAccueil(new Service());
-        action.execute(request);
-        
-        Serialisation serial = new AccueilSerialisation();
-        serial.appliquer(request, response);
-        
+
+        switch (request.getParameter("action")) {
+            case ("initHome"): {
+                Action action = new InitialiserAccueil(new Service());
+                action.execute(request);
+
+                Serialisation serial = new AccueilSerialisation();
+                serial.appliquer(request, response);
+            }
+            break;
+            case ("connexion"): {
+                Action action = new SeConnecter(new Service());
+                action.execute(request);
+
+                Serialisation serial = new ConnexionSerialisation();
+                serial.appliquer(request, response);
+            }
+            break;
+            case ("checkAuth"): {
+                Serialisation serial = new VerifierAuthentificationSerialisation();
+                serial.appliquer(request, response);
+            }
+            break;
+            case ("deconnexion"): {
+                request.getSession().removeAttribute("authentication");
+            }
+            break;
+        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -96,7 +121,5 @@ public class ActionServlet extends HttpServlet {
         super.destroy(); //To change body of generated methods, choose Tools | Templates.
         JpaUtil.fermerFabriquePersistance();
     }
-    
-    
 
 }

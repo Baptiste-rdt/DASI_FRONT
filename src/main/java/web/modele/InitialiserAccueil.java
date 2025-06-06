@@ -24,7 +24,7 @@ public class InitialiserAccueil extends Action {
     @Override
     public void execute(HttpServletRequest request) {
         List<Map.Entry<Medium, Long>> mediums = this.service.getTopXMediums(5);
-        System.out.println(mediums);
+        //System.out.println(mediums);
         request.setAttribute("mediums", mediums);
     }
     

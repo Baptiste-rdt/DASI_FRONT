@@ -1,3 +1,8 @@
+web\vue\VerifierAuthentificationSerialisation.class
+web\controleur\ActionServlet.class
 web\modele\Action.class
 web\modele\InitialiserAccueil.class
-web\controleur\ActionServlet.class
+web\modele\SeConnecter.class
+web\vue\Serialisation.class
+web\vue\AccueilSerialisation.class
+web\vue\ConnexionSerialisation.class

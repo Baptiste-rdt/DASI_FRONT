@@ -32,7 +32,7 @@
                         $(document).ready(function () {
                             console.log("Appel AJAX"); // affichage dans la console web
                             $.ajax({
-                                url: 'http://localhost:8080/predict_if/ActionServlet', // URL de l'ActionServlet
+                                url: 'http://localhost:8080/predict_if/ActionServlet?action=initHome', // URL de l'ActionServlet
                                 method: 'GET', // Type de la requête (GET, POST, etc.)
                                 dataType: 'json', // Type de la réponse attendue (JSON ici)
                                 success: function (response) {
