@@ -30,9 +30,13 @@ public class ConnexionSerialisation extends Serialisation {
         Gson gson = new Gson();
         JsonObject object = new JsonObject();
 
-        if (user instanceof Client || user instanceof Employee) {
-
+        if (user instanceof Client) {
             object.addProperty("success", true);
+            object.addProperty("role", "client");
+            request.getSession().setAttribute("authentication", user);
+        } else if (user instanceof Employee) {
+            object.addProperty("success", true);
+            object.addProperty("role", "employe");
             request.getSession().setAttribute("authentication", user);
         } else {
             object.addProperty("success", false);

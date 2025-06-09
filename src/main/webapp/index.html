@@ -3,10 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Predict'IF - Accueil</title>
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <link rel="stylesheet" href="style.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     </head>
     <body>
+
         <header>
             <h1>Predict'IF</h1>
             <div class="buttons">
@@ -19,56 +20,80 @@
             <section class="intro">
                 <p>
                     Découvrez notre cabinet de voyance par téléphone, regroupant Spirites, astrologues ou encore cartomanciens.
-                    Les médiums qui nous accompagnent sont reconnus internationalement pour leurs talents.
-                    Chacun d’entre eux a été sélectionné pour sa précision, son honnêteté et son sérieux.
-                    Le respect de la déontologie est notre priorité.
+                    Nos médiums sont reconnus internationalement pour leur précision et leur éthique.
                 </p>
             </section>
 
             <section class="mediums">
                 <h2>Nos médiums les plus populaires</h2>
                 <div class="medium-list" id="liste-mediums">
-                    <script>
-                        $(document).ready(function () {
-                            console.log("Appel AJAX"); // affichage dans la console web
-                            $.ajax({
-                                url: 'http://localhost:8080/predict_if/ActionServlet?action=initHome', // URL de l'ActionServlet
-                                method: 'GET', // Type de la requête (GET, POST, etc.)
-                                dataType: 'json', // Type de la réponse attendue (JSON ici)
-                                success: function (response) {
-                                    console.log("Réponse brute :", response); // Affiche la réponse brute
-
-                                    // Vérifiez si la réponse contient la propriété 'mediums' et si c'est un tableau
-                                    if (response.mediums && Array.isArray(response.mediums)) {
-                                        var listeMediums = $('#liste-mediums');
-                                        // Utilisez une boucle for classique pour itérer sur le tableau des clients
-                                        for (var i = 0; i < response.mediums.length; i++) {
-                                            var medium = response.mediums[i];
-
-                                            // Crée un bloc HTML bien structuré
-                                            var mediumHTML = `
-                                                <div class="medium">
-                                                    <img src="images/avatar.jpg" alt="Astrologue" />
-                                                    <p>${medium.name}</p>
-                                                </div>
-                                            `;
-
-                                            // Ajoute le bloc à la liste
-                                            listeMediums.append(mediumHTML);
-                                        }
-                                    } else {
-                                        console.error("La réponse ne contient pas de liste de mediums valide.");
-                                    }
-                                },
-
-                                error: function (error) {
-                                    console.error("Erreur AJAX:", error); // Afficher l'erreur dans la console
-                                }
-                            });
-                        });
-                    </script>
+                    <!-- Médiums chargés dynamiquement -->
                 </div>
             </section>
         </main>
+
+        <script>
+            // Redirection si l'utilisateur est déjà connecté
+            $(document).ready(function () {
+                $.ajax({
+                    url: "ActionServlet?action=redirigerSiConnecte",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.connected) {
+                            if (res.role === "client") {
+                                window.location.href = "accueil-client.html";
+                            } else if (res.role === "employe") {
+                                window.location.href = "dashboard-employe.html";
+                            }
+                        }
+                    },
+                    error: function () {
+                        console.warn("Impossible de vérifier l'état de connexion.");
+                    }
+                });
+            });
+
+            function disconnect() {
+                $.ajax({
+                    url: "ActionServlet?action=deconnexion",
+                    method: "GET",
+                    success: function () {
+                        window.location.href = "index.html";
+                    },
+                    error: function () {
+                        alert("Déconnexion impossible.");
+                    }
+                });
+            }
+
+            // Charger les médiums populaires
+            $.ajax({
+            url: "ActionServlet?action=initHome",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                    if (response.mediums && Array.isArray(response.mediums)) {
+                    const liste = $("#liste-mediums");
+                            response.mediums.forEach(medium => {
+                            const mediumHTML = `
+                                    <div class="medium">
+                                        <img src="images/avatar.jpg" alt="${medium.name}" />
+                                        <p>${medium.name}</p>
+                                    </div>`;
+                                    liste.append(mediumHTML);
+                            });
+                    } else {
+                    console.error("Liste de médiums non valide.");
+                    }
+                    },
+                    error: function (error) {
+                    console.error("Erreur AJAX:", error);
+                    }
+            });
+            }
+            );
+        </script>
+
     </body>
 </html>

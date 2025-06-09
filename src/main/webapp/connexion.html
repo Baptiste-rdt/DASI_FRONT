@@ -46,7 +46,13 @@
                         console.log("Réponse du serveur :", response);
                         // Selon la réponse, redirige ou affiche un message d'erreur
                         if (response.success) {
-                            window.location.href = "accueil-client.html";
+                            if (response.role === "client") {
+                                window.location.href = "accueil-client.html";
+                            } else if (response.role === "employe") {
+                                window.location.href = "dashboard-employe.html";
+                            } else {
+                                alert("Rôle inconnu. Contactez un administrateur.");
+                            }
                         } else {
                             alert("Identifiants incorrects.");
                         }
@@ -55,6 +61,25 @@
                         console.error("Erreur AJAX :", error);
                         alert("Erreur serveur, veuillez réessayer.");
                     }
+                });
+                $(document).ready(function () {
+                    $.ajax({
+                        url: "ActionServlet?action=redirigerSiConnecte",
+                        method: "GET",
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.connected) {
+                                if (res.role === "client") {
+                                    window.location.href = "accueil-client.html";
+                                } else if (res.role === "employe") {
+                                    window.location.href = "dashboard-employe.html";
+                                }
+                            }
+                        },
+                        error: function () {
+                            console.warn("Erreur lors de la vérification de session.");
+                        }
+                    });
                 });
             }
         </script>

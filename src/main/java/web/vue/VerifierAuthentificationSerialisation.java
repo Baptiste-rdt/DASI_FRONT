@@ -23,13 +23,22 @@ public class VerifierAuthentificationSerialisation extends Serialisation {
     @Override
     public void appliquer(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Object user = request.getSession().getAttribute("authentication");
-        
+
         Gson gson = new Gson();
         JsonObject object = new JsonObject();
 
-        if (user instanceof Client || user instanceof Employee) {
-
+        if (user instanceof Client) {
+            Client c = (Client) user;
             object.addProperty("connected", true);
+            object.addProperty("role", "client");
+            object.addProperty("nom", c.getLastName());
+            object.addProperty("prenom", c.getFirstName());
+        } else if (user instanceof Employee) {
+            Employee e = (Employee) user;
+            object.addProperty("connected", true);
+            object.addProperty("role", "employe");
+            object.addProperty("nom", e.getLastName());
+            object.addProperty("prenom", e.getFirstName());
         } else {
             object.addProperty("connected", false);
         }
@@ -41,5 +50,5 @@ public class VerifierAuthentificationSerialisation extends Serialisation {
         out.print(json);
         out.flush();
     }
-    
+
 }
