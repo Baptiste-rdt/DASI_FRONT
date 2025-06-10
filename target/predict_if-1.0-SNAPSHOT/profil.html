@@ -1,71 +1,127 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Profil Client - Predict'IF</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<header>
-    <h1>Predict'IF</h1>
-    <div class="user-info">
-        <span>John Doe</span>
-        <img src="avatar.jpg" alt="Profil" class="avatar">
-    </div>
-</header>
+    <head>
+        <meta charset="UTF-8">
+        <title>Mon Profil - Predict'IF</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
 
-<main class="profile-page">
-    <section class="infos-client">
-        <h2>Infos Client</h2>
-        <input type="text" value="John" readonly>
-        <input type="text" value="Doe" readonly>
-        <input type="email" value="john.doe@email.com" readonly>
-        <input type="password" value="********" readonly>
-        <input type="date" value="1990-01-01" readonly>
-        <input type="text" value="123 rue Exemple, Paris" readonly>
-        <input type="tel" value="+33 6 12 34 56 78" readonly>
-        <button onclick="window.location.href='profil-edit.html'">Modifier</button>
-    </section>
+        <header>
+            <h1>Predict'IF</h1>
+            <div class="user-info">
+                <span id="userName">...</span>
+                <img src="avatar.jpg" alt="Profil" class="avatar">
+            </div>
+        </header>
 
-    <section class="profil-astral">
-        <h2>Profil Astral</h2>
-        <div class="astral-circles">
-            <div class="circle-item">Signe astrologique</div>
-            <div class="circle-item">Signe chinois</div>
-            <div class="circle-item">Couleur de chance</div>
-            <div class="circle-item">Animal totem</div>
-        </div>
-    </section>
+        <main class="profile-page">
 
-    <section class="history">
-        <h2>Historique</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Médium</th>
-                    <th>Type médium</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Médium 1</td>
-                    <td>Cartomancienne</td>
-                    <td>02/06/2025</td>
-                </tr>
-                <tr>
-                    <td>Médium 2</td>
-                    <td>Spirite</td>
-                    <td>03/06/2025</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+            <section class="infos-client">
+                <h2>Mes Informations</h2>
+                <form id="profil-form" onsubmit="updateProfil(event)">
+                    <input type="text" name="prenom" placeholder="Prénom" readonly>
+                    <input type="text" name="nom" placeholder="Nom" readonly>
+                    <input type="email" name="email" placeholder="Email" readonly>
+                    <input type="password" name="mdp" placeholder="Mot de passe" readonly>
+                    <input type="date" name="naissance" placeholder="Date de naissance" readonly>
+                    <input type="text" name="adresse" placeholder="Adresse" readonly>
+                    <input type="tel" name="telephone" placeholder="Téléphone" readonly>
 
-    <div class="actions">
-        <button onclick="window.location.href='accueil-client.html'">Retour accueil</button>
-        <button onclick="window.location.href='index.html'">Déconnexion</button>
-    </div>
-</main>
-</body>
+                    <div class="actions">
+                        <button type="button" id="editBtn" onclick="enableEditing()">Modifier</button>
+                        <button type="submit" id="saveBtn" style="display: none;">Enregistrer</button>
+                    </div>
+                </form>
+            </section>
+
+            <div class="actions">
+                <button onclick="window.location.href = 'accueil-client.html'">Retour Accueil</button>
+                <button onclick="disconnect()">Déconnexion</button>
+            </div>
+
+        </main>
+
+        <script>
+            // Charger infos client au chargement
+            $(document).ready(function () {
+                $.ajax({
+                    url: "ActionServlet?action=checkAuth",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (res) {
+                        if (!res.connected || res.role !== "client") {
+                            window.location.href = "index.html";
+                        } else {
+                            $('#userName').text(res.prenom + " " + res.nom);
+                            $('input[name="prenom"]').val(res.prenom);
+                            $('input[name="nom"]').val(res.nom);
+                            $('input[name="email"]').val(res.email);
+                            $('input[name="mdp"]').val(res.mdp);
+                            $('input[name="naissance"]').val(res.naissance);
+                            $('input[name="adresse"]').val(res.adresse);
+                            $('input[name="telephone"]').val(res.telephone);
+                        }
+                    },
+                    error: function () {
+                        alert("Erreur serveur.");
+                        window.location.href = "index.html";
+                    }
+                });
+            });
+
+            function enableEditing() {
+                $('#profil-form input').prop('readonly', false);
+                $('#editBtn').hide();
+                $('#saveBtn').show();
+            }
+
+            function updateProfil(event) {
+                event.preventDefault();
+
+                const form = $('#profil-form');
+                const data = {
+                    nom: form.find('input[name="nom"]').val(),
+                    prenom: form.find('input[name="prenom"]').val(),
+                    email: form.find('input[name="email"]').val(),
+                    naissance: form.find('input[name="naissance"]').val(),
+                    adresse: form.find('input[name="adresse"]').val(),
+                    telephone: form.find('input[name="telephone"]').val(),
+                    mdp: form.find('input[name="mdp"]').val()
+                };
+
+                $.ajax({
+                    url: "ActionServlet?action=modifierProfil",
+                    method: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.success) {
+                            alert("Modifications enregistrées !");
+                            location.reload();
+                        } else {
+                            alert("Erreur : " + res.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Erreur serveur.");
+                    }
+                });
+            }
+
+            function disconnect() {
+                $.ajax({
+                    url: "ActionServlet?action=deconnexion",
+                    method: "GET",
+                    success: function () {
+                        window.location.href = "index.html";
+                    },
+                    error: function () {
+                        alert("Déconnexion impossible.");
+                    }
+                });
+            }
+        </script>
+    </body>
 </html>

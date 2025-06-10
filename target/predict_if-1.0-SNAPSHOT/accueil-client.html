@@ -34,27 +34,8 @@
                     <th>Date</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr onclick="openMediumModal('Médium 1', 'Cartomancienne')">
-                    <td><a href="#" onclick="event.preventDefault()">Médium 1</a></td>
-                    <td>Cartomancienne</td>
-                    <td>02/06/2025</td>
-                </tr>
-                <tr onclick="openMediumModal('Médium 2', 'Spirite')">
-                    <td><a href="#" onclick="event.preventDefault()">Médium 2</a></td>
-                    <td>Spirite</td>
-                    <td>03/06/2025</td>
-                </tr>
-                <tr onclick="openMediumModal('Médium 3', 'Astrologue')">
-                    <td><a href="#" onclick="event.preventDefault()">Médium 3</a></td>
-                    <td>Astrologue</td>
-                    <td>04/06/2025</td>
-                </tr>
-                <tr onclick="openMediumModal('Médium 4', 'Astrologue')">
-                    <td><a href="#" onclick="event.preventDefault()">Médium 4</a></td>
-                    <td>Astrologue</td>
-                    <td>05/06/2025</td>
-                </tr>
+            <tbody id="historiqueTable">
+                <!-- Historique chargé dynamiquement -->
             </tbody>
         </table>
 
@@ -80,7 +61,6 @@
 </main>
 
 <script>
-    // Vérifie l'authentification et récupère nom/prénom du client
     $(document).ready(function () {
         $.ajax({
             url: "ActionServlet?action=checkAuth",
@@ -93,6 +73,9 @@
                     if (response.nom && response.prenom) {
                         document.getElementById("clientName").textContent = response.prenom + " " + response.nom;
                     }
+
+                    // Charger l’historique
+                    chargerHistorique();
                 }
             },
             error: function () {
@@ -101,6 +84,29 @@
             }
         });
     });
+
+    function chargerHistorique() {
+        $.ajax({
+            url: "ActionServlet?action=historiqueClient",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                const tbody = document.getElementById("historiqueTable");
+                tbody.innerHTML = "";
+                data.historique.forEach(item => {
+                    const row = `<tr onclick="openMediumModal('${item.mediumNom}', '${item.mediumType}')">
+                        <td>${item.mediumNom}</td>
+                        <td>${item.mediumType}</td>
+                        <td>${item.date}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            },
+            error: function () {
+                alert("Erreur lors du chargement de l’historique.");
+            }
+        });
+    }
 
     function disconnect() {
         $.ajax({

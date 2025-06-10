@@ -33,6 +33,12 @@ public class VerifierAuthentificationSerialisation extends Serialisation {
             object.addProperty("role", "client");
             object.addProperty("nom", c.getLastName());
             object.addProperty("prenom", c.getFirstName());
+            object.addProperty("email", c.getEmail());
+            object.addProperty("naissance", c.getBirthDate().getTime());
+            object.addProperty("adresse", c.getAddress());
+            object.addProperty("telephone", c.getPhone());
+            object.addProperty("adresse", c.getPassword());
+
         } else if (user instanceof Employee) {
             Employee e = (Employee) user;
             object.addProperty("connected", true);

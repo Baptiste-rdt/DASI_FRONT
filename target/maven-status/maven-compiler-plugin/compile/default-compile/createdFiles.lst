@@ -3,6 +3,8 @@ web\controleur\ActionServlet.class
 ActionDashboardEmploye.class
 DashboardEmployeSerialisation.class
 web\modele\Action.class
+web\vue\ModifierProfilSerialisation.class
+web\modele\ModifierProfil.class
 web\modele\SInscrire.class
 web\vue\DeconnexionSerialisation.class
 web\vue\InscriptionSerialisation.class
@@ -15,5 +17,7 @@ web\modele\SeDeconnecter.class
 AuthFiltre.class
 web\controleur\AccueilRedirectServlet.class
 web\filtre\PagePubliqueRedirectFilter.class
+web\modele\HistoriqueClient.class
 web\vue\AccueilSerialisation.class
+web\vue\HistoriqueClientSerialisation.class
 web\modele\InitialiserAccueilClient.class

@@ -18,14 +18,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import web.modele.Action;
+import web.modele.HistoriqueClient;
 import web.modele.InitialiserAccueil;
+import web.modele.ModifierProfil;
 import web.modele.SInscrire;
 import web.modele.SeConnecter;
 import web.modele.SeDeconnecter;
 import web.vue.AccueilSerialisation;
 import web.vue.ConnexionSerialisation;
 import web.vue.DeconnexionSerialisation;
+import web.vue.HistoriqueClientSerialisation;
 import web.vue.InscriptionSerialisation;
+import web.vue.ModifierProfilSerialisation;
 import web.vue.Serialisation;
 import web.vue.VerifierAuthentificationSerialisation;
 
@@ -100,6 +104,20 @@ public class ActionServlet extends HttpServlet {
                     res.addProperty("connected", false);
                 }
                 response.getWriter().print(new Gson().toJson(res));
+                break;
+            }
+
+            case "historiqueClient": {
+                Action a = new HistoriqueClient(new Service());
+                a.execute(request);
+                new HistoriqueClientSerialisation().appliquer(request, response);
+                break;
+            }
+            
+            case "modifierProfil": {
+                Action a = new ModifierProfil(new Service());
+                a.execute(request);
+                new ModifierProfilSerialisation().appliquer(request, response);
                 break;
             }
 
