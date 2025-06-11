@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Connexion - Predict'IF</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="modal-overlay" onclick="closeModal()"></div>
+
+        <div class="modal">
+            <button class="close-button" onclick="closeModal()">X</button>
+            <h2>Connexion</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Mot de passe" required>
+                <div class="button-row">
+                    <button type="submit">Connexion</button>
+                    <button type="button" onclick="window.location.href = 'inscription.html'">S’inscrire</button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            function closeModal() {
+                window.location.href = "index.html"; // retour accueil
+            }
+
+            function handleLogin(event) {
+                event.preventDefault();
+
+                // Récupère les valeurs du formulaire
+                const email = document.querySelector('input[name="email"]').value;
+                const password = document.querySelector('input[name="password"]').value;
+
+                // Envoie une requête AJAX en POST avec jQuery
+                $.ajax({
+                    url: "/predict_if/ActionServlet?action=connexion",
+                    method: "POST",
+                    data: {
+                        email: email,
+                        password: password
+                    },
+                    success: function (response) {
+                        console.log("Réponse du serveur :", response);
+                        // Selon la réponse, redirige ou affiche un message d'erreur
+                        if (response.success) {
+                            if (response.role === "client") {
+                                window.location.href = "accueil-client.html";
+                            } else if (response.role === "employe") {
+                                window.location.href = "dashboard-employe.html";
+                            } else {
+                                alert("Rôle inconnu. Contactez un administrateur.");
+                            }
+                        } else {
+                            alert("Identifiants incorrects.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Erreur AJAX :", error);
+                        alert("Erreur serveur, veuillez réessayer.");
+                    }
+                });
+                $(document).ready(function () {
+                    $.ajax({
+                        url: "ActionServlet?action=redirigerSiConnecte",
+                        method: "GET",
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.connected) {
+                                if (res.role === "client") {
+                                    window.location.href = "accueil-client.html";
+                                } else if (res.role === "employe") {
+                                    window.location.href = "dashboard-employe.html";
+                                }
+                            }
+                        },
+                        error: function () {
+                            console.warn("Erreur lors de la vérification de session.");
+                        }
+                    });
+                });
+            }
+        </script>
+    </body>
+</html>

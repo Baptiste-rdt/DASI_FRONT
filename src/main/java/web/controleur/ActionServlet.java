@@ -29,6 +29,7 @@ import web.modele.ObtenirPrediction;
 import web.modele.SInscrire;
 import web.modele.SeConnecter;
 import web.modele.SeDeconnecter;
+import web.modele.StatistiquesAction;
 import web.modele.ValiderConsultation;
 import web.vue.AccueilSerialisation;
 import web.vue.ConnexionSerialisation;
@@ -42,6 +43,7 @@ import web.vue.ListeMediumsSerialisation;
 import web.vue.ModifierProfilSerialisation;
 import web.vue.PredictionSerialisation;
 import web.vue.Serialisation;
+import web.vue.StatistiquesSerialisation;
 import web.vue.ValiderConsultationSerialisation;
 import web.vue.VerifierAuthentificationSerialisation;
 
@@ -132,14 +134,14 @@ public class ActionServlet extends HttpServlet {
                 new ModifierProfilSerialisation().appliquer(request, response);
                 break;
             }
-            
+
             case "initMediumList": {
                 Action a = new InitialiserListeMediums(new Service());
                 a.execute(request);
                 new ListeMediumsSerialisation().appliquer(request, response);
                 break;
             }
-            
+
             case "launchConsult": {
                 Action a = new LancerConsultation(new Service());
                 a.execute(request);
@@ -180,6 +182,13 @@ public class ActionServlet extends HttpServlet {
                 res.addProperty("error", "Action inconnue.");
                 response.getWriter().print(new Gson().toJson(res));
             }
+            case "statistiques": {
+                Action a = new StatistiquesAction(new Service());
+                a.execute(request);
+                new StatistiquesSerialisation().appliquer(request, response);
+                break;
+            }
+
         }
     }
 

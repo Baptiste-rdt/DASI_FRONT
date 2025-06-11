@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Statistiques - Predict'IF</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Predict'IF</h1>
+            <nav class="nav-tabs">
+                <button onclick="window.location.href = 'dashboard-employe.html'">Dashboard</button>
+                <button onclick="window.location.href = 'statistiques.html'">Statistiques</button>
+            </nav>
+            <div class="user-info">
+                <span id="employeeName">John Doe</span> <!-- ← ce span sera mis à jour dynamiquement -->
+                <img src="avatar.jpg" alt="Profil" class="avatar">
+            </div>
+        </header>
+
+        <main>
+            <h2>Statistiques de l'agence</h2>
+
+            <div class="stats-grid">
+                <div class="chart-card">
+                    <h3>Consultations par employé</h3>
+                    <canvas id="consultationsChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Répartition des médiums</h3>
+                    <canvas id="mediumsPieChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Consultations par médium</h3>
+                    <canvas id="mediumsBarChart"></canvas>
+                </div>
+            </div>
+        </main>
+
+
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: "ActionServlet?action=statistiques",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        // 1. Médiums par dénomination (bar)
+                        const mediums = data.topMediums;
+                        const mediumLabels = mediums.map(m => m.nom);
+                        const mediumCounts = mediums.map(m => m.count);
+
+                        const ctxBar = document.getElementById('mediumsBarChart').getContext('2d');
+                        new Chart(ctxBar, {
+                            type: 'bar',
+                            data: {
+                                labels: mediumLabels,
+                                datasets: [{
+                                        label: 'Consultations',
+                                        data: mediumCounts,
+                                        backgroundColor: '#ccc',
+                                        borderColor: '#444',
+                                        borderWidth: 1
+                                    }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+
+                        // 2. Répartition par type de médium (pie)
+                        const typeCountMap = {};
+                        mediums.forEach(m => {
+                            const type = m.denomination;
+                            if (!typeCountMap[type]) {
+                                typeCountMap[type] = 0;
+                            }
+                            typeCountMap[type] += m.count;
+                        });
+
+                        const ctxPie = document.getElementById('mediumsPieChart').getContext('2d');
+                        new Chart(ctxPie, {
+                            type: 'pie',
+                            data: {
+                                labels: Object.keys(typeCountMap),
+                                datasets: [{
+                                        data: Object.values(typeCountMap),
+                                        backgroundColor: ['#f77', '#77f', '#7ff', '#7f7']
+                                    }]
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        });
+
+                        // 3. Ligne nb consultations par employé
+                        const employees = data.topEmployees;
+                        const employeeLabels = employees.map(e => e.nom);
+                        const employeeCounts = employees.map(e => e.count);
+
+                        const ctxLine = document.getElementById('consultationsChart').getContext('2d');
+                        new Chart(ctxLine, {
+                            type: 'line',
+                            data: {
+                                labels: employeeLabels,
+                                datasets: [{
+                                        label: 'Consultations par employé',
+                                        data: employeeCounts,
+                                        borderColor: '#333',
+                                        backgroundColor: 'rgba(0,0,0,0.1)',
+                                        fill: true,
+                                        tension: 0.3
+                                    }]
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert("Erreur lors du chargement des statistiques.");
+                    }
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                // Récupère le nom de l'utilisateur connecté
+                $.ajax({
+                    url: "ActionServlet?action=checkAuth",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (res) {
+                        if (!res.connected || res.role !== "employe") {
+                            window.location.href = "index.html";
+                        } else {
+                            $('#employeeName').text(res.prenom + " " + res.nom);
+                        }
+                    },
+                    error: function () {
+                        console.warn("Impossible de récupérer les infos de l'utilisateur.");
+                    }
+                });
+            });
+        </script>
+
+    </body>
+</html>
