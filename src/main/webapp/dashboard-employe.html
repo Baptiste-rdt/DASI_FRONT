@@ -30,8 +30,8 @@
 
             <section class="current-consultation">
                 <h2>Mon Dashboard</h2>
-                <div class="consult-box">
-                    Aucune consultation en cours
+                <div class="consult-box" id="consultationBox">
+                    <!-- Rempli dynamiquement en JS -->
                 </div>
             </section>
 
@@ -117,9 +117,13 @@
                             statusSpan.className = "status occupied";
                         }
 
-                        const consultBox = document.querySelector(".consult-box");
-                        if (data.consultationEnCours) {
-                            consultBox.textContent = `Consultation avec ${data.clientEnCours}`;
+                        const consultBox = document.getElementById("consultationBox");
+
+                        if (data.consultationEnCours && data.clientEnCours) {
+                            consultBox.innerHTML = `
+                         <p>Consultation avec ${data.clientEnCours}</p>
+                        <button onclick="window.location.href='faire-consultation.html'">Rejoindre</button>
+    `                   ;
                         } else {
                             consultBox.textContent = "Aucune consultation en cours";
                         }

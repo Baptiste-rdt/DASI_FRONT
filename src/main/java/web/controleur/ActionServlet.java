@@ -18,19 +18,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import web.modele.Action;
+import web.modele.DashboardEmploye;
+import web.modele.FaireConsultation;
 import web.modele.HistoriqueClient;
 import web.modele.InitialiserAccueil;
 import web.modele.ModifierProfil;
+import web.modele.ObtenirPrediction;
 import web.modele.SInscrire;
 import web.modele.SeConnecter;
 import web.modele.SeDeconnecter;
+import web.modele.ValiderConsultation;
 import web.vue.AccueilSerialisation;
 import web.vue.ConnexionSerialisation;
+import web.vue.DashboardEmployeSerialisation;
 import web.vue.DeconnexionSerialisation;
+import web.vue.FaireConsultationSerialisation;
 import web.vue.HistoriqueClientSerialisation;
 import web.vue.InscriptionSerialisation;
 import web.vue.ModifierProfilSerialisation;
+import web.vue.PredictionSerialisation;
 import web.vue.Serialisation;
+import web.vue.ValiderConsultationSerialisation;
 import web.vue.VerifierAuthentificationSerialisation;
 
 /**
@@ -113,11 +121,39 @@ public class ActionServlet extends HttpServlet {
                 new HistoriqueClientSerialisation().appliquer(request, response);
                 break;
             }
-            
+
             case "modifierProfil": {
                 Action a = new ModifierProfil(new Service());
                 a.execute(request);
                 new ModifierProfilSerialisation().appliquer(request, response);
+                break;
+            }
+
+            case "dashboardEmploye": {
+                Action a = new DashboardEmploye(new Service());
+                a.execute(request);
+                new DashboardEmployeSerialisation().appliquer(request, response);
+                break;
+            }
+
+            case "faireConsultation": {
+                Action a = new FaireConsultation(new Service());
+                a.execute(request);
+                new FaireConsultationSerialisation().appliquer(request, response);
+                break;
+            }
+
+            case "validerConsultation": {
+                Action a = new ValiderConsultation(new Service());
+                a.execute(request);
+                new ValiderConsultationSerialisation().appliquer(request, response);
+                break;
+            }
+
+            case "aidePrediction": {
+                Action a = new ObtenirPrediction(new Service());
+                a.execute(request);
+                new PredictionSerialisation().appliquer(request, response);
                 break;
             }
 
