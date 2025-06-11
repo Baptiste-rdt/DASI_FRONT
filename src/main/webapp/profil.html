@@ -11,8 +11,8 @@
         <header>
             <h1>Predict'IF</h1>
             <div class="user-info">
-                <span id="userName">...</span>
-                <img src="avatar.jpg" alt="Profil" class="avatar">
+                <span id="clientName"></span>
+                <img src="images/profil.png" alt="Profil" class="avatar">
             </div>
         </header>
 
@@ -50,6 +50,25 @@
                     url: "ActionServlet?action=checkAuth",
                     method: "GET",
                     dataType: "json",
+                    success: function (response) {
+                        if (!response.connected || response.role !== "client") {
+                            window.location.href = "index.html";
+                        } else {
+                            if (response.nom && response.prenom) {
+                                document.getElementById("clientName").textContent = response.prenom + " " + response.nom;
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("Erreur serveur, veuillez réessayer.");
+                        window.location.href = "index.html";
+                    }
+                });
+
+                $.ajax({
+                    url: "ActionServlet?action=checkAuth",
+                    method: "GET",
+                    dataType: "json",
                     success: function (res) {
                         if (!res.connected || res.role !== "client") {
                             window.location.href = "index.html";
@@ -59,9 +78,19 @@
                             $('input[name="nom"]').val(res.nom);
                             $('input[name="email"]').val(res.email);
                             $('input[name="mdp"]').val(res.mdp);
-                            $('input[name="naissance"]').val(res.naissance);
                             $('input[name="adresse"]').val(res.adresse);
                             $('input[name="telephone"]').val(res.telephone);
+
+                            const date = new Date(res.naissance);
+
+                            // Format YYYY-MM-DD
+                            const year = date.getFullYear();
+                            const month = String(date.getMonth() + 1).padStart(2, '0'); // les mois commencent à 0
+                            const day = String(date.getDate()).padStart(2, '0');
+
+                            const formattedDate = `${year}-${month}-${day}`;
+
+                            $('input[name="naissance"]').val(formattedDate);
                         }
                     },
                     error: function () {
@@ -81,6 +110,14 @@
                 event.preventDefault();
 
                 const form = $('#profil-form');
+                let naissanceStr = form.find('input[name="naissance"]').val();
+
+                // Conversion de la date en timestamp
+                let naissanceTimestamp = null;
+                if (naissanceStr) {
+                    naissanceTimestamp = new Date(naissanceStr).getTime();
+                }
+
                 const data = {
                     nom: form.find('input[name="nom"]').val(),
                     prenom: form.find('input[name="prenom"]').val(),

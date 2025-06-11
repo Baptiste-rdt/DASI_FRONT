@@ -1,86 +1,194 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Liste des Médiums - Predict'IF</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>Predict'IF</h1>
-    <div class="user-info" onclick="window.location.href='profil.html'">
-      <span>John Doe</span>
-      <img src="avatar.jpg" alt="Profil" class="avatar">
-    </div>
-  </header>
+    <head>
+        <meta charset="UTF-8">
+        <title>Liste des Médiums - Predict'IF</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Predict'IF</h1>
+            <div class="user-info" onclick="window.location.href = 'profil.html'">
+                <span id="clientName"></span>
+                <img src="images/profil.png" alt="Profil" class="avatar">
+            </div>
+        </header>
 
-  <main class="mediums-page">
-    <h2>Liste de Médiums</h2>
-    <div class="mediums-grid">
-      <div class="medium-card" onclick="openMediumModal('Médium 1', 'Cartomancienne')">
-        <img src="avatar.png" alt="Medium 1">
-        <p><strong>Médium 1</strong><br>Cartomancienne</p>
-      </div>
-      <div class="medium-card" onclick="openMediumModal('Médium 2', 'Spirite')">
-        <img src="avatar.png" alt="Medium 2">
-        <p><strong>Médium 2</strong><br>Spirite</p>
-      </div>
-      <div class="medium-card" onclick="openMediumModal('Médium 3', 'Astrologue')">
-        <img src="avatar.png" alt="Medium 3">
-        <p><strong>Médium 3</strong><br>Astrologue</p>
-      </div>
-      <div class="medium-card" onclick="openMediumModal('Médium 4', 'Astrologue')">
-        <img src="avatar.png" alt="Medium 4">
-        <p><strong>Médium 4</strong><br>Astrologue</p>
-      </div>
-      <div class="medium-card" onclick="openMediumModal('Médium 5', 'Spirite')">
-        <img src="avatar.png" alt="Medium 5">
-        <p><strong>Médium 5</strong><br>Spirite</p>
-      </div>
-      <div class="medium-card" onclick="openMediumModal('Médium 6', 'Spirite')">
-        <img src="avatar.png" alt="Medium 6">
-        <p><strong>Médium 6</strong><br>Spirite</p>
-      </div>
-    </div>
+        <main class="mediums-page">
+            <h2>Liste de Médiums</h2>
+            <div class="mediums-grid" id="liste-mediums"></div>
+            <div id="pagination" class="pagination"></div>
 
-    <div class="actions">
-      <button onclick="window.location.href='accueil-client.html'">Retour accueil</button>
-      <button onclick="window.location.href='index.html'">Déconnexion</button>
-    </div>
-  </main>
+            <div class="actions">
+                <button onclick="window.location.href = 'accueil-client.html'">Retour accueil</button>
+                <button onclick="window.location.href = 'index.html'">Déconnexion</button>
+            </div>
+        </main>
 
-  <!-- Modale Médium -->
-  <div class="modal-overlay" id="mediumModalOverlay" onclick="closeMediumModal()"></div>
-  <div class="modal" id="mediumModal">
-    <button class="close-button" onclick="closeMediumModal()">← retour</button>
-    <div class="medium-info">
-      <img src="avatar.png" alt="Medium Avatar" class="avatar-medium">
-      <h2 id="mediumName">Médium</h2>
-      <h3 id="mediumType">Type</h3>
-      <p id="mediumDescription">Spécialiste des grandes conversations<br>au-delà de <strong>TOUTES</strong> les frontières</p>
-    </div>
-    <button onclick="launchConsultation()">Lancer une consultation</button>
-  </div>
+        <!-- Modale Médium -->
+        <div class="modal-overlay" id="mediumModalOverlay" onclick="closeMediumModal()" style="display: none;"></div>
+        <div class="modal" id="mediumModal" style="display: none;">
+            <button class="close-button" onclick="closeMediumModal()">← retour</button>
+            <div class="medium-info" id="modal-details">
+                <img src="images/avatar.jpg" alt="Medium Avatar" class="avatar-medium">
+                <h2 id="mediumName">Médium</h2>
+                <h3 id="mediumType">Type</h3>
+                <p id="mediumDescription">Description</p>
+            </div>
+            <button id="modal-valid-button">Lancer une consultation</button>
+        </div>
 
-  <script>
-    function openMediumModal(name, type) {
-      document.getElementById("mediumName").textContent = name;
-      document.getElementById("mediumType").textContent = type;
-      document.getElementById("mediumDescription").innerHTML =
-        "Spécialiste des grandes conversations<br>au-delà de <strong>TOUTES</strong> les frontières";
-      document.getElementById("mediumModalOverlay").style.display = "block";
-      document.getElementById("mediumModal").style.display = "block";
-    }
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: "ActionServlet?action=checkAuth",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        if (!response.connected || response.role !== "client") {
+                            window.location.href = "index.html";
+                        } else {
+                            if (response.nom && response.prenom) {
+                                document.getElementById("clientName").textContent = response.prenom + " " + response.nom;
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("Erreur serveur, veuillez réessayer.");
+                        window.location.href = "index.html";
+                    }
+                });
+                // Chargement des médiums populaires
+                let mediumsData = [];
+                const itemsPerPage = 9;
+                let currentPage = 1;
 
-    function closeMediumModal() {
-      document.getElementById("mediumModalOverlay").style.display = "none";
-      document.getElementById("mediumModal").style.display = "none";
-    }
+                function displayPage(page) {
+                    const liste = $("#liste-mediums");
+                    liste.empty();
 
-    function launchConsultation() {
-      alert("Consultation demandée !");
-      closeMediumModal();
-    }
-  </script>
-</body>
+                    // Calculer l'index de début et de fin
+                    const start = (page - 1) * itemsPerPage;
+                    const end = start + itemsPerPage;
+                    const pageItems = mediumsData.slice(start, end);
+
+                    /*pageItems.forEach(medium => {
+                        const mediumHTML = `
+                            <div class="medium-card" onclick="openMediumModal('${medium.name}', '${medium.type}', '${medium.description}')">
+                                <img src="images/avatar.jpg" alt="Profil">
+                                <p><strong>${medium.name}</strong><br>${medium.type}</p>
+                            </div>`;
+                        liste.append(mediumHTML);
+                    });*/
+
+                    pageItems.forEach(medium => {
+                        const card = $(`
+                            <div class="medium-card">
+                              <img src="images/avatar.jpg" alt="Profil">
+                              <p><strong>${medium.name}</strong><br>${medium.type}</p>
+                            </div>
+                          `);
+                        card.on('click', () => openMediumModal(medium.name, medium.type, medium.description));
+                        liste.append(card);
+                    });
+
+                    renderPagination();
+                }
+
+                function renderPagination() {
+                    const pagination = $("#pagination");
+                    pagination.empty();
+
+                    const totalPages = Math.ceil(mediumsData.length / itemsPerPage);
+
+                    // Bouton Précédent
+                    const prevDisabled = currentPage === 1 ? "disabled" : "";
+                    pagination.append(`<button ${prevDisabled} class="page-btn" id="prevBtn">← Précédent</button>`);
+
+                    // Boutons numéros de pages (tu peux limiter si trop de pages)
+                    for (let i = 1; i <= totalPages; i++) {
+                        const activeClass = i === currentPage ? "active" : "";
+                        pagination.append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
+                    }
+
+                    // Bouton Suivant
+                    const nextDisabled = currentPage === totalPages ? "disabled" : "";
+                    pagination.append(`<button ${nextDisabled} class="page-btn" id="nextBtn">Suivant →</button>`);
+                }
+
+                // Gestion des clics sur les boutons de pagination
+                $("#pagination").on("click", ".page-btn", function () {
+                    if ($(this).is("#prevBtn") && currentPage > 1) {
+                        currentPage--;
+                    } else if ($(this).is("#nextBtn") && currentPage < Math.ceil(mediumsData.length / itemsPerPage)) {
+                        currentPage++;
+                    } else if ($(this).data("page")) {
+                        currentPage = parseInt($(this).data("page"));
+                    }
+                    displayPage(currentPage);
+                });
+
+                // Chargement des médiums populaires
+                $.ajax({
+                    url: "ActionServlet?action=initMediumList",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.mediums && Array.isArray(response.mediums)) {
+                            mediumsData = response.mediums;
+                            displayPage(currentPage);
+                        } else {
+                            console.error("Liste de médiums non valide.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Erreur AJAX:", error);
+                    }
+                });
+            });
+        </script>
+        <script>
+            function openMediumModal(name, type, description) {
+                document.getElementById("mediumName").textContent = name;
+                document.getElementById("mediumType").textContent = type;
+                document.getElementById("mediumDescription").innerHTML = description;
+                document.getElementById("mediumModalOverlay").style.display = "block";
+                document.getElementById("mediumModal").style.display = "block";
+                document.getElementById("modal-valid-button").onclick = function () {
+                    launchConsultation(name);
+                }
+            }
+
+            function closeMediumModal() {
+                document.getElementById("mediumModalOverlay").style.display = "none";
+                document.getElementById("mediumModal").style.display = "none";
+            }
+
+            function launchConsultation(mediumName) {
+                $.ajax({
+                    url: "/predict_if/ActionServlet?action=launchConsult",
+                    method: "POST",
+                    data: {
+                        mediumName: mediumName
+                    },
+                    success: function (response) {
+                        console.log("Réponse du serveur :", response);
+                        // Selon la réponse, redirige ou affiche un message d'erreur
+                        if (response.success) {
+                            alert("Consultation demandée !");
+                            window.location.href = "accueil-client.html";
+                        } else {
+                            alert("Demande échouée, réessayez ultérieurement.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Erreur AJAX :", error);
+                        alert("Erreur serveur, veuillez réessayer.");
+                    }
+                });
+                closeMediumModal();
+            }
+        </script>
+    </body>
 </html>
