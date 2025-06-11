@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import web.modele.Action;
 import web.modele.HistoriqueClient;
 import web.modele.InitialiserAccueil;
+import web.modele.InitialiserListeMediums;
+import web.modele.LancerConsultation;
 import web.modele.ModifierProfil;
 import web.modele.SInscrire;
 import web.modele.SeConnecter;
@@ -29,6 +31,8 @@ import web.vue.ConnexionSerialisation;
 import web.vue.DeconnexionSerialisation;
 import web.vue.HistoriqueClientSerialisation;
 import web.vue.InscriptionSerialisation;
+import web.vue.LancerConsultationSerialisation;
+import web.vue.ListeMediumsSerialisation;
 import web.vue.ModifierProfilSerialisation;
 import web.vue.Serialisation;
 import web.vue.VerifierAuthentificationSerialisation;
@@ -118,6 +122,20 @@ public class ActionServlet extends HttpServlet {
                 Action a = new ModifierProfil(new Service());
                 a.execute(request);
                 new ModifierProfilSerialisation().appliquer(request, response);
+                break;
+            }
+            
+            case "initMediumList": {
+                Action a = new InitialiserListeMediums(new Service());
+                a.execute(request);
+                new ListeMediumsSerialisation().appliquer(request, response);
+                break;
+            }
+            
+            case "launchConsult": {
+                Action a = new LancerConsultation(new Service());
+                a.execute(request);
+                new LancerConsultationSerialisation().appliquer(request, response);
                 break;
             }
 

@@ -295,10 +295,11 @@ tr:hover {
 
 .mediums-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(3, 180px);
     gap: 20px;
     justify-items: center;
-    margin-top: 20px;
+    justify-content: center;
+    margin: 20px auto 0 auto;
 }
 
 .medium-card {
@@ -553,4 +554,44 @@ table a {
 
 .dropdown-menu button:hover {
     background-color: #eee;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 10px;
+  flex-wrap: wrap; /* pour s’adapter si trop de pages */
+}
+
+.pagination .page-btn {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s;
+  min-width: 40px;
+  text-align: center;
+  user-select: none;
+}
+
+.pagination .page-btn:hover:not(:disabled) {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination .page-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.pagination .page-btn.active {
+  background-color: #0056b3;
+  color: white;
+  border-color: #004085;
+  cursor: default;
 }

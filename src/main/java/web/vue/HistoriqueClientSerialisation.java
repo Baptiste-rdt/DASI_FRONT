@@ -27,6 +27,7 @@ public class HistoriqueClientSerialisation extends Serialisation {
                 JsonObject obj = new JsonObject();
                 obj.addProperty("mediumNom", c.getMedium().getName());
                 obj.addProperty("mediumType", c.getMedium().getDenomination());
+                obj.addProperty("mediumDescription", c.getMedium().getDescription());
                 obj.addProperty("date", sdf.format(c.getDebut()));
                 historiqueArray.add(obj);
             }
