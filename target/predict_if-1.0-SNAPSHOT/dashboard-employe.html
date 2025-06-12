@@ -1,151 +1,159 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>Dashboard Employé - Predict'IF</title>
-        <link rel="stylesheet" href="style.css">
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Employé - Predict'IF</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+</head>
+<body>
 
-        <header>
-            <h1>Predict'IF</h1>
-            <nav class="nav-tabs">
-                <button onclick="window.location.href = 'dashboard-employe.html'">Dashboard</button>
-                <button onclick="window.location.href = 'statistiques.html'">Statistiques</button>
-            </nav>
-            <div class="user-dropdown" onclick="toggleMenu()">
-                <span id="employeeName"></span>
-                <img src="avatar.jpg" alt="Profil" class="avatar">
-                <div id="dropdownMenu" class="dropdown-menu">
-                    <button onclick="disconnect()">Déconnexion</button>
-                </div>
-            </div>
-        </header>
+<header>
+    <h1>Predict'IF</h1>
+    <nav class="nav-tabs">
+        <button onclick="window.location.href = 'dashboard-employe.html'">Dashboard</button>
+        <button onclick="window.location.href = 'statistiques.html'">Statistiques</button>
+    </nav>
+    <div class="user-dropdown" onclick="toggleMenu()">
+        <span id="employeeName"></span>
+        <img src="images/avatar.jpg" alt="Profil" class="avatar">
+        <div id="dropdownMenu" class="dropdown-menu">
+            <button onclick="disconnect()">Déconnexion</button>
+        </div>
+    </div>
+</header>
 
-        <main class="dashboard-employe">
-            <div class="availability">
-                <span class="status available">Disponible ●</span>
-            </div>
+<main class="dashboard-employe">
+    <div class="availability">
+        <span class="status available">Disponible ●</span>
+    </div>
 
-            <section class="current-consultation">
-                <h2>Mon Dashboard</h2>
-                <div class="consult-box" id="consultationBox">
-                    <!-- Rempli dynamiquement en JS -->
-                </div>
-            </section>
+    <section class="current-consultation">
+        <h2>Mon Dashboard</h2>
+        <div class="consult-box" id="consultationBox">
+            <!-- Rempli dynamiquement en JS -->
+        </div>
+    </section>
 
-            <section class="history">
-                <h2>Historique de mes consultations</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Médium</th>
-                            <th>Dénomination</th>
-                            <th>Date</th>
-                            <th>Client</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Contenu rempli dynamiquement -->
-                    </tbody>
-                </table>
-            </section>
-        </main>
+    <section class="history">
+        <h2>Historique de mes consultations</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Médium</th>
+                    <th>Dénomination</th>
+                    <th>Date</th>
+                    <th>Client</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Contenu rempli dynamiquement -->
+            </tbody>
+        </table>
+    </section>
+</main>
 
-        <script>
-            function toggleMenu() {
-                const menu = document.getElementById('dropdownMenu');
-                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById('dropdownMenu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    window.addEventListener('click', function (e) {
+        const dropdown = document.querySelector('.user-dropdown');
+        const menu = document.getElementById('dropdownMenu');
+        if (!dropdown.contains(e.target)) {
+            menu.style.display = 'none';
+        }
+    });
+
+    function disconnect() {
+        $.ajax({
+            url: "ActionServlet?action=deconnexion",
+            method: "GET",
+            cache: false,
+            headers: { 'Cache-Control': 'no-cache' },
+            success: function () {
+                window.location.href = "index.html";
+            },
+            error: function () {
+                alert("Erreur de déconnexion.");
             }
+        });
+    }
 
-            window.addEventListener('click', function (e) {
-                const dropdown = document.querySelector('.user-dropdown');
-                const menu = document.getElementById('dropdownMenu');
-                if (!dropdown.contains(e.target)) {
-                    menu.style.display = 'none';
+    $(document).ready(function () {
+        $.ajax({
+            url: "ActionServlet?action=checkAuth&_=" + new Date().getTime(),
+            method: "GET",
+            cache: false,
+            headers: { 'Cache-Control': 'no-cache' },
+            dataType: "json",
+            success: function (response) {
+                if (!response.connected || response.role !== "employe") {
+                    window.location.href = "index.html";
+                } else {
+                    if (response.nom && response.prenom) {
+                        document.getElementById("employeeName").textContent = response.prenom + " " + response.nom;
+                    }
+                    loadDashboard();
                 }
-            });
-
-            function disconnect() {
-                $.ajax({
-                    url: "ActionServlet?action=deconnexion",
-                    method: "GET",
-                    success: function () {
-                        window.location.href = "index.html";
-                    },
-                    error: function () {
-                        alert("Erreur de déconnexion.");
-                    }
-                });
+            },
+            error: function () {
+                alert("Erreur serveur.");
+                window.location.href = "index.html";
             }
+        });
+    });
 
-            $(document).ready(function () {
-                $.ajax({
-                    url: "ActionServlet?action=checkAuth",
-                    method: "GET",
-                    dataType: "json",
-                    success: function (response) {
-                        if (!response.connected || response.role !== "employe") {
-                            window.location.href = "index.html";
-                        } else {
-                            if (response.nom && response.prenom) {
-                                document.getElementById("employeeName").textContent = response.prenom + " " + response.nom;
-                            }
-                            loadDashboard();
-                        }
-                    },
-                    error: function () {
-                        alert("Erreur serveur.");
-                        window.location.href = "index.html";
-                    }
-                });
-            });
+    function loadDashboard() {
+        $.ajax({
+            url: "ActionServlet?action=dashboardEmploye&_=" + new Date().getTime(),
+            method: "GET",
+            cache: false,
+            headers: { 'Cache-Control': 'no-cache' },
+            dataType: "json",
+            success: function (data) {
+                const statusSpan = document.querySelector(".availability .status");
+                if (data.disponible) {
+                    statusSpan.textContent = "Disponible ●";
+                    statusSpan.className = "status available";
+                } else {
+                    statusSpan.textContent = "Occupé ●";
+                    statusSpan.className = "status occupied";
+                }
 
-            function loadDashboard() {
-                $.ajax({
-                    url: "ActionServlet?action=dashboardEmploye",
-                    method: "GET",
-                    dataType: "json",
-                    success: function (data) {
-                        const statusSpan = document.querySelector(".availability .status");
-                        if (data.disponible) {
-                            statusSpan.textContent = "Disponible ●";
-                            statusSpan.className = "status available";
-                        } else {
-                            statusSpan.textContent = "Occupé ●";
-                            statusSpan.className = "status occupied";
-                        }
+                const consultBox = document.getElementById("consultationBox");
 
-                        const consultBox = document.getElementById("consultationBox");
-
-                        if (data.consultationEnCours && data.clientEnCours) {
-                            consultBox.innerHTML = `
-                         <p>Consultation avec ${data.clientEnCours}</p>
+                if (data.consultationEnCours && data.clientEnCours) {
+                    consultBox.innerHTML = `
+                        <p>Consultation avec ${data.clientEnCours}</p>
                         <button onclick="window.location.href='faire-consultation.html'">Rejoindre</button>
-    `                   ;
-                        } else {
-                            consultBox.textContent = "Aucune consultation en cours";
-                        }
+                    `;
+                } else {
+                    consultBox.textContent = "Aucune consultation en cours";
+                }
 
-                        const tbody = document.querySelector("table tbody");
-                        tbody.innerHTML = "";
-                        data.historique.forEach(item => {
-                            const row = `<tr>
-                                <td>${item.medium}</td>
-                                <td>${item.denomination}</td>
-                                <td>${item.date}</td>
-                                <td><a href="profil-client.html?id=${item.clientId}">${item.clientNom}</a></td>
-                            </tr>`;
-                            tbody.innerHTML += row;
-                        });
-                    },
-                    error: function () {
-                        alert("Erreur de chargement du dashboard.");
-                    }
+                const tbody = document.querySelector("table tbody");
+                tbody.innerHTML = "";
+                data.historique.forEach(item => {
+                    const row = `<tr>
+                        <td>${item.medium}</td>
+                        <td>${item.denomination}</td>
+                        <td>${item.date}</td>
+                        <td>${item.clientNom}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
                 });
+            },
+            error: function () {
+                alert("Erreur de chargement du dashboard.");
             }
-        </script>
-
-    </body>
+        });
+    }
+</script>
+</body>
 </html>

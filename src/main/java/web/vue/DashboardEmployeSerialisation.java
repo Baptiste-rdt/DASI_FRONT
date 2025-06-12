@@ -38,13 +38,27 @@ public class DashboardEmployeSerialisation extends Serialisation {
                 Medium m = c.getMedium();
                 Client client = c.getClient();
 
-                obj.addProperty("medium", m.getName());
-                obj.addProperty("denomination", m.getDenomination());
-                obj.addProperty("date", sdf.format(c.getDebut()));
-                obj.addProperty("clientNom", client.getLastName()+ " " + client.getFirstName());
-                obj.addProperty("clientId", client.getId());
+                if (m != null) {
+                    obj.addProperty("medium", m.getName());
+                    obj.addProperty("denomination", m.getDenomination());
+                } else {
+                    obj.addProperty("medium", "Inconnu");
+                    obj.addProperty("denomination", "Inconnue");
+                }
+
+                if (client != null) {
+                    obj.addProperty("clientNom", client.getLastName() + " " + client.getFirstName());
+                    obj.addProperty("clientId", client.getId());
+                } else {
+                    obj.addProperty("clientNom", "Client inconnu");
+                    obj.addProperty("clientId", -1);
+                }
+
+                obj.addProperty("date", c.getDebut() != null ? sdf.format(c.getDebut()) : "N/A");
+
                 historiqueArray.add(obj);
             }
+
         }
 
         container.add("historique", historiqueArray);

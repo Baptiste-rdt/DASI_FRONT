@@ -16,6 +16,7 @@ H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\modele\ObtenirPredict
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\vue\ModifierProfilSerialisation.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\vue\FaireConsultationSerialisation.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\modele\ModifierProfil.java
+H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\modele\StatistiquesAction.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\vue\DashboardEmployeSerialisation.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\vue\DeconnexionSerialisation.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\filtre\AuthFiltre.java
@@ -25,6 +26,7 @@ H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\vue\ConnexionSerialis
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\vue\ValiderConsultationSerialisation.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\controleur\AccueilRedirectServlet.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\modele\ActionDashboardEmploye.java
+H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\vue\StatistiquesSerialisation.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\modele\InitialiserListeMediums.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\vue\ListeMediumsSerialisation.java
 H:\Documents\DASI\DASI_FRONT2\DASI_FRONT\src\main\java\web\filtre\IndexRedirectFilter.java
