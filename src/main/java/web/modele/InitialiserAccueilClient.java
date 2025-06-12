@@ -5,10 +5,24 @@
  */
 package web.modele;
 
+import fr.insalyon.dasi.java_app.model.Client;
+import fr.insalyon.dasi.java_app.service.Service;
+import javax.servlet.http.HttpServletRequest;
+
 /**
  *
  * @author breydet
  */
-public class InitialiserAccueilClient {
+public class InitialiserAccueilClient extends Action {
+
+    public InitialiserAccueilClient(Service service) {
+        super(service);
+    }
+
+    @Override
+    public void execute(HttpServletRequest request) {
+        Client client = this.service.getClientById(Integer.parseInt(request.getParameter("idClient")));
+        request.setAttribute("client", client);
+    }
     
 }

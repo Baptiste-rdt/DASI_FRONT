@@ -18,10 +18,22 @@
 
         <main class="client-home">
             <section class="astral-info">
-                <div class="circle-item">Signe du zodiaque</div>
-                <div class="circle-item">Signe astrologique chinois</div>
-                <div class="circle-item">Couleur Porte-bonheur</div>
-                <div class="circle-item">Animal-Totem</div>
+                <div class="flex-column-center">
+                <div class="circle-item" id="zodiaque">Signe du zodiaque</div>
+                <div>Signe du zodiaque</div>
+                </div>
+                <div class="flex-column-center">
+                <div class="circle-item" id="chinois">Signe astrologique chinois</div>
+                <div>Signe astrologique chinois</div>
+                </div>
+                <div class="flex-column-center">
+                <div class="circle-item" id="couleur">Couleur Porte-bonheur</div>
+                <div>Couleur Porte-bonheur</div>
+                </div>
+                <div class="flex-column-center">
+                <div class="circle-item" id="animal">Animal-Totem</div>
+                <div>Animal-Totem</div>
+                </div>
             </section>
 
             <section class="history">
@@ -74,6 +86,10 @@
                                 document.getElementById("clientName").textContent = response.prenom + " " + response.nom;
                             }
 
+                            if (response.id) {
+                                chargerProfilAstro(response.id);
+                            }
+
                             // Charger l’historique
                             chargerHistorique();
                         }
@@ -84,6 +100,26 @@
                     }
                 });
             });
+
+            function chargerProfilAstro(id) {
+                $.ajax({
+                    url: "ActionServlet?action=initClientHome",
+                    method: "POST",
+                    data: {
+                        idClient: id
+                    },
+                    success: function (response) {
+                        document.getElementById("zodiaque").textContent = response.zodiaque || "Signe du zodiaque";
+                        document.getElementById("chinois").textContent = response.chinois || "Signe astrologique chinois";
+                        document.getElementById("couleur").textContent = response.couleur || "Couleur porte-bonheur";
+                        document.getElementById("animal").textContent = response.animal || "Animal totem";
+                    },
+                    error: function () {
+                        alert("Erreur serveur, veuillez réessayer.");
+                        window.location.href = "index.html";
+                    }
+                });
+            }
 
             function chargerHistorique() {
                 $.ajax({

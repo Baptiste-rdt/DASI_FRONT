@@ -8,11 +8,13 @@ web\modele\LancerConsultation.class
 web\vue\FaireConsultationSerialisation.class
 web\vue\Serialisation.class
 web\modele\ValiderConsultation.class
+web\modele\StatistiquesAction.class
 web\vue\ConnexionSerialisation.class
 AuthFiltre.class
 web\controleur\AccueilRedirectServlet.class
 web\modele\HistoriqueClient.class
 web\modele\FaireConsultation.class
+web\vue\StatistiquesSerialisation.class
 web\vue\AccueilSerialisation.class
 web\modele\InitialiserAccueilClient.class
 web\vue\VerifierAuthentificationSerialisation.class

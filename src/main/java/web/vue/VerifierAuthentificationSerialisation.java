@@ -31,6 +31,7 @@ public class VerifierAuthentificationSerialisation extends Serialisation {
             Client c = (Client) user;
             object.addProperty("connected", true);
             object.addProperty("role", "client");
+            object.addProperty("id", c.getId());
             object.addProperty("nom", c.getLastName());
             object.addProperty("prenom", c.getFirstName());
             object.addProperty("email", c.getEmail());

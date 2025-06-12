@@ -22,6 +22,7 @@ import web.modele.DashboardEmploye;
 import web.modele.FaireConsultation;
 import web.modele.HistoriqueClient;
 import web.modele.InitialiserAccueil;
+import web.modele.InitialiserAccueilClient;
 import web.modele.InitialiserListeMediums;
 import web.modele.LancerConsultation;
 import web.modele.ModifierProfil;
@@ -31,6 +32,7 @@ import web.modele.SeConnecter;
 import web.modele.SeDeconnecter;
 import web.modele.StatistiquesAction;
 import web.modele.ValiderConsultation;
+import web.vue.AccueilClientSerialisation;
 import web.vue.AccueilSerialisation;
 import web.vue.ConnexionSerialisation;
 import web.vue.DashboardEmployeSerialisation;
@@ -174,6 +176,13 @@ public class ActionServlet extends HttpServlet {
                 Action a = new ObtenirPrediction(new Service());
                 a.execute(request);
                 new PredictionSerialisation().appliquer(request, response);
+                break;
+            }
+            
+            case "initClientHome": {
+                Action a = new InitialiserAccueilClient(new Service());
+                a.execute(request);
+                new AccueilClientSerialisation().appliquer(request, response);
                 break;
             }
 
